@@ -7,6 +7,7 @@ import { jsx,  Flex } from 'theme-ui';
 function Panel({ arti }) {
   const [article, setArticle] = useState([]);
   const [search, setSearch] = useState('')
+  const [playing , setPlaying] = useState(false)
 
   useEffect(() => {
     firestore.collection("articles").onSnapshot((snapshot) => {
@@ -82,6 +83,74 @@ function Panel({ arti }) {
                       <details>
                       <summary className="summary">Read More</summary>
                       <p>{arti.description}</p>
+
+                       {
+                        playing ? <button onClick={() => {
+                          setPlaying(false)
+                          window.speechSynthesis.cancel()
+                        }} style={{
+                          backgroundColor: '#f2f2f2',
+                          color: '#000',
+                          border: 'none',
+                          padding: '10px 20px',
+                          textAlign: 'center',
+                          textDecoration: 'none',
+                          display: 'inline-block',
+                          fontSize: '16px',
+                          margin: '4px 2px',
+                          cursor: 'pointer',
+                          borderRadius: '8px',
+                          outline: 'none',
+                          boxShadow: '0 9px #999',
+                          width: '100%',
+                          marginTop: '10px',
+                          marginBottom: '10px',
+                          marginLeft: '0px',
+                          marginRight: '0px',
+                          height: 'auto',
+                          fontWeight: 'bold',
+                          fontFamily: 'sans-serif',
+                          fontSize: '20px',
+
+                        }}>Cancel</button> 
+
+                          :<button onClick={()=> {
+                          const speech = new SpeechSynthesisUtterance();
+                          speech.text = `${arti.description}`;
+                          speech.volume = 3;
+                          speech.rate = 0.9;
+                          speech.pitch = 1;
+                          window.speechSynthesis.speak(speech);
+                          setPlaying(true)
+                      }} style={{
+                          backgroundColor: '#f2f2f2',
+                          color: '#000',
+                          border: 'none',
+                          padding: '10px 20px',
+                          textAlign: 'center',
+                          textDecoration: 'none',
+                          display: 'inline-block',
+                          fontSize: '16px',
+                          margin: '4px 2px',
+                          cursor: 'pointer',
+                          borderRadius: '8px',
+                          outline: 'none',
+                          boxShadow: '0 9px #999',
+                          width: '100%',
+                          marginTop: '10px',
+                          marginBottom: '10px',
+                          marginLeft: '0px',
+                          marginRight: '0px',
+                          height: 'auto',
+                          fontWeight: 'bold',
+                          fontFamily: 'sans-serif',
+                          fontSize: '20px',
+
+
+                      }}>Hear 🎧</button>
+
+                      }
+                      
                       </details>
                        
                       </div>
