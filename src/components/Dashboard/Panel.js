@@ -77,6 +77,10 @@ function Panel({ arti }) {
 
                       <div >
                         <p className="title">{arti.title}</p>
+                        { 
+                          arti.createdAt === null ? ' ' : <p> Uploaded ⏱️ {arti.createdAt.toDate().toDateString()}</p>
+                        }
+
                       </div>
 
                       <div className="font-semibold ">
