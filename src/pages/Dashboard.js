@@ -11,6 +11,7 @@ import Search from 'components/Dashboard/Search';
 
 
 
+
 function Dashboard() {
   if(firebase.auth().currentUser != null){
     return (
