@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { firestore } from "../../config/firebase";
 import { Box, Container, Image, Heading } from "theme-ui";
-import { jsx,  Flex } from 'theme-ui';
-
+import { jsx, Flex } from "theme-ui";
+import loading from "./loading.gif";
 
 function Panel({ arti }) {
   const [article, setArticle] = useState([]);
-  const [search, setSearch] = useState('')
-  const [playing , setPlaying] = useState(false)
+  const [search, setSearch] = useState("");
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
-    firestore.collection("articles").onSnapshot((snapshot) => {
-      setArticle(snapshot.docs.map((doc) => doc.data()));
-    });
+    firestore
+      .collection("articles")
+      .orderBy("createdAt", "desc")
+      .onSnapshot((snapshot) => {
+        setArticle(snapshot.docs.map((doc) => doc.data()));
+      });
   }, []);
 
   if (article.length > 0) {
@@ -29,174 +32,194 @@ function Panel({ arti }) {
         <>
           <Box as="section" id="banner" sx={styles.banner}>
             <Container sx={styles.container}>
-            <input
-            type="search"
-            placeholder="Search"
-            style={{height:'24px',marginLeft:'20px',marginRight:'20px',padding:'16px',borderRadius:'8px 8px 0 0 ',width: '90.333333%',outline:'none',border:'none',borderBottom:'3px solid #d9d9d9 '}}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-              {article.filter((arti) => {
-              if(search === ''){
-                return arti
-              }
-              else if(arti.title.toLowerCase().includes(search.toLowerCase())){
-                return arti
-              }
-              else if(arti.description.toLowerCase().includes(search.toLowerCase())){
-                return arti
-              }
-             
-              
-            }).map((arti, pos) => (
-                <center>
+              <input
+                type="search"
+                placeholder="Search"
+                style={{
+                  height: "24px",
+                  marginLeft: "20px",
+                  marginRight: "20px",
+                  padding: "16px",
+                  borderRadius: "8px 8px 0 0 ",
+                  width: "90.333333%",
+                  outline: "none",
+                  border: "none",
+                  borderBottom: "3px solid #d9d9d9 ",
+                }}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              {article
+                .filter((arti) => {
+                  if (search === "") {
+                    return arti;
+                  } else if (
+                    arti.title.toLowerCase().includes(search.toLowerCase())
+                  ) {
+                    return arti;
+                  } else if (
+                    arti.description
+                      .toLowerCase()
+                      .includes(search.toLowerCase())
+                  ) {
+                    return arti;
+                  }
+                  else if(
+                    arti.tag.toLowerCase().includes(search.toLowerCase())
+                  )
+                  {
+                    return arti;
+                  }
+                })
+                .map((arti, pos) => (
                   <div key={pos}>
-                    <div
-                  
-                    className="card"
-                    >
-                      <div
-                        className="font-semibold "
-                        style={{ height: "auto", width: "98%",}}
-                      >
+                  <center>
+                    <div >
+                      <div className="card">
+                        <div
+                          className="font-semibold "
+                          style={{ height: "auto", width: "98%" }}
+                        >
+                          <img
+                            src={arti.link}
+                            alt="image"
+                            style={{
+                              height: "auto",
+                              width: "60%",
+                              borderRadius: "5px",
+                              border: "none",
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <p className="title">{arti.title}</p>
+                          {arti.createdAt === null ? (
+                            " "
+                          ) : (
+                            <p>
+                              {" "}
+                              Uploaded ⏱️{" "}
+                              {arti.createdAt.toDate().toDateString()}
+                            </p>
+                          )}
+                          <p style={{color:'blue'}}>{arti.tag}</p>
+                        </div>
 
-                        <img
-                          src={arti.link}
-                          alt="image"
-                          style={{
-                            height: 'auto',
-                            width: '60%',
-                            borderRadius: '5px',
-                            border: 'none',
-                            
-                            
-                          }}
-                         
-                        />
-
-                      </div>
-
-                      <div >
-                        <p className="title">{arti.title}</p>
-                        { 
-                          arti.createdAt === null ? ' ' : <p> Uploaded ⏱️ {arti.createdAt.toDate().toDateString()}</p>
-                        }
-
-                      </div>
-
-                      <div className="font-semibold ">
-                      <details>
-                      <summary className="summary">Read More</summary>
-                      <p>{arti.description}</p>
-
-                       {
-                        playing ? <button onClick={() => {
-                          setPlaying(false)
-                          window.speechSynthesis.cancel()
-                        }} style={{
-                          backgroundColor: '#f2f2f2',
-                          color: '#000',
-                          border: 'none',
-                          padding: '10px 20px',
-                          textAlign: 'center',
-                          textDecoration: 'none',
-                          display: 'inline-block',
-                          fontSize: '16px',
-                          margin: '4px 2px',
-                          cursor: 'pointer',
-                          borderRadius: '8px',
-                          outline: 'none',
-                          boxShadow: '0 9px #999',
-                          width: '100%',
-                          marginTop: '10px',
-                          marginBottom: '10px',
-                          marginLeft: '0px',
-                          marginRight: '0px',
-                          height: 'auto',
-                          fontWeight: 'bold',
-                          fontFamily: 'sans-serif',
-                          fontSize: '20px',
-
-                        }}>Cancel</button> 
-
-                          :<button onClick={()=> {
-                          const speech = new SpeechSynthesisUtterance();
-                          speech.text = `${arti.description}`;
-                          speech.volume = 3;
-                          speech.rate = 0.9;
-                          speech.pitch = 1;
-                          window.speechSynthesis.speak(speech);
-                          setPlaying(true)
-                      }} style={{
-                          backgroundColor: '#f2f2f2',
-                          color: '#000',
-                          border: 'none',
-                          padding: '10px 20px',
-                          textAlign: 'center',
-                          textDecoration: 'none',
-                          display: 'inline-block',
-                          fontSize: '16px',
-                          margin: '4px 2px',
-                          cursor: 'pointer',
-                          borderRadius: '8px',
-                          outline: 'none',
-                          boxShadow: '0 9px #999',
-                          width: '100%',
-                          marginTop: '10px',
-                          marginBottom: '10px',
-                          marginLeft: '0px',
-                          marginRight: '0px',
-                          height: 'auto',
-                          fontWeight: 'bold',
-                          fontFamily: 'sans-serif',
-                          fontSize: '20px',
-
-
-                      }}>Hear 🎧</button>
-
-                      }
-                      
-                      </details>
-                       
+                        <div className="font-semibold ">
+                          <details>
+                            <summary className="summary">Read More</summary>
+                            {playing ? (
+                              <button
+                                onClick={() => {
+                                  setPlaying(false);
+                                  window.speechSynthesis.cancel();
+                                }}
+                                style={{
+                                  backgroundColor: "#f2f2f2",
+                                  color: "#000",
+                                  border: "none",
+                                  padding: "10px 20px",
+                                  textAlign: "center",
+                                  textDecoration: "none",
+                                  display: "inline-block",
+                                  fontSize: "16px",
+                                  margin: "4px 2px",
+                                  cursor: "pointer",
+                                  borderRadius: "8px",
+                                  outline: "none",
+                                  boxShadow: "0 3px  #d9d9d9",
+                                  width: "100%",
+                                  marginTop: "10px",
+                                  marginBottom: "10px",
+                                  marginLeft: "0px",
+                                  marginRight: "0px",
+                                  height: "auto",
+                                  fontWeight: "bold",
+                                  fontFamily: "sans-serif",
+                                  fontSize: "20px",
+                                }}
+                              >
+                                Cancel ⛔︎{" "}
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                 
+                                  const speech = new SpeechSynthesisUtterance();
+                                  speech.text = `${arti.description}`;
+                                  speech.volume = 1;
+                                  speech.rate = 0.9;
+                                  speech.pitch = 1;
+                                  window.speechSynthesis.speak(speech);
+                                  setPlaying(true);
+                                }}
+                                style={{
+                                  backgroundColor: "#f2f2f2",
+                                  color: "#000",
+                                  border: "none",
+                                  padding: "10px 20px",
+                                  textAlign: "center",
+                                  textDecoration: "none",
+                                  display: "inline-block",
+                                  boxShadow: "0 3px  #d9d9d9",
+                                  fontSize: "16px",
+                                  margin: "4px 2px",
+                                  cursor: "pointer",
+                                  borderRadius: "8px",
+                                  outline: "none",
+                                  width: "100%",
+                                  marginTop: "10px",
+                                  marginBottom: "10px",
+                                  marginLeft: "0px",
+                                  marginRight: "0px",
+                                  height: "auto",
+                                  fontWeight: "bold",
+                                  fontFamily: "sans-serif",
+                                  fontSize: "20px",
+                                }}
+                              >
+                                Hear 📢
+                              </button>
+                            )}
+                            <p>{arti.description}</p>
+                          </details>
+                        </div>
                       </div>
                     </div>
+                  </center>
                   </div>
-                </center>
-              ))}
+                ))}
             </Container>
           </Box>
 
-
           <style jsx>
-           {`
-            .card{
-              max-width:500px;
-              margin:22px auto;
-              border-radius:5px;
-              box-shadow:0 2px 8px rgba(0,0,0,0.26);
-              padding:20px;
-            }
-            img{
-              width: 100%;
-              height: auto;
-            }
-            .title{
-              font-size: 35px;
-              font-weight: bold;
-              margin: 10px 0;
-              display: -webkit-box;
-              overflow: hidden;
-              -webkit-line-clamp: 1;
-              -webkit-box-orient: vertical;
-
-
-            }
-            .summary{
-              -webkit-user-select: none; 
-              -ms-user-select: none; 
-              user-select: none;
-            }
-           `}
-        </style>
+            {`
+              .card {
+                max-width: 500px;
+                margin: 22px auto;
+                border-radius: 5px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+                padding: 20px;
+              }
+              img {
+                width: 100%;
+                height: auto;
+              }
+              .title {
+                font-size: 35px;
+                font-weight: bold;
+                margin: 10px 0;
+                display: -webkit-box;
+                overflow: hidden;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+              }
+              .summary {
+                -webkit-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+              }
+            `}
+          </style>
         </>
       );
     }
@@ -212,7 +235,15 @@ function Panel({ arti }) {
     return (
       <Box as="section" id="banner" sx={styles.banner}>
         <Container sx={styles.container}>
-          <h1 style={{ fontSize: "35px" }}>No Articles</h1>
+          <div style={{ height: "100vh", background: "#F8FBFD" }}>
+            <center>
+              <img
+                src={loading}
+                alt="loading"
+                style={{ height: "auto", width: "50%" }}
+              />
+            </center>
+          </div>
         </Container>
       </Box>
     );
@@ -237,6 +268,7 @@ const styles = {
       mb: ["40px", null, null, "65px"],
     },
   },
+
   logo: {
     display: "block",
     width: "7%",
@@ -257,19 +289,16 @@ const styles = {
       display: ["none", null, null, null, "block"],
     },
   },
-  main:{
+  main: {
     padding: "25px",
     borderRadius: "5px",
     height: "auto",
     width: "80vw",
     border: "3px solid #d9d9d9",
     "@media screen and (max-width: 960px)": {
-          border: "3px solid #d9d9d9",
-        },
-      },
-
-   
-  }
-
+      border: "3px solid #d9d9d9",
+    },
+  },
+};
 
 export default Panel;
