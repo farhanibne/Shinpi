@@ -5,7 +5,6 @@ import {
   firestore,
   serverTimestamp,
   human,
-  
 } from "../../config/firebase";
 import Link from "next/link";
 import emailjs from "@emailjs/browser";
@@ -28,9 +27,12 @@ const customStyles = {
   },
 };
 
+
+
 function QQ({ user }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [tag, setTag] = useState("");
   const [image, setImage] = useState(null);
   const [url, setUrl] = useState("");
   const form = useRef();
@@ -38,8 +40,10 @@ function QQ({ user }) {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalnote, setModalnote] = useState(false);
 
+  const [modelpop, setModelpop] = useState(false);
+
   const SubmitDetails = () => {
-    if (!title || !body || !image) {
+    if (!title || !body || !image || !tag) {
       return alert("Please fill all the fields");
     }
     var uploadTask = storage.ref().child(`image/${uuidv4()}`).put(image);
@@ -47,7 +51,7 @@ function QQ({ user }) {
       "state_changed",
       (snapshot) => {
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        if (progress == "100") return alert(" Articles posted Successfully 🥳");
+        if (progress == "100") return alert("Article posted successfully 🎉")          
       },
       (error) => {
         alert("Error Uploading Image");
@@ -63,10 +67,12 @@ function QQ({ user }) {
             description: body,
             createdAt: serverTimestamp(),
             link: yotch,
+            tag: tag,
           });
 
           setTitle("");
           setBody("");
+          setTag("");
         });
       }
     );
@@ -88,7 +94,7 @@ function QQ({ user }) {
   };
 
   return (
-    <div ref={form} style={{ height: "100vh" }}>
+    <div ref={form} style={{height:'auto',background:'white'}}>
       <center>
         <h1 style={{ fontSize: "45px" }}>Create An Article</h1>
         <br />
@@ -131,6 +137,33 @@ function QQ({ user }) {
           onChange={(e) => setBody(e.target.value)}
         />
         <br />
+
+
+
+         <div>
+          <input
+          required
+          style={{
+            width: "300px",
+            height: "40px",
+            borderRadius: "5px 5px 0 0 ",
+            margin: "15px",
+            border: "none",
+            padding: "5px",
+            borderBottom: "1px solid black",
+            background: "transparent",
+          }}
+          type="text"
+          value={tag}
+          id="title"
+          placeholder="Tags [ eg: Use only one,  use '#' ]"
+          name="title"
+          autoComplete="off"
+          onChange={(e) => setTag(e.target.value)}
+        />
+       
+       
+          </div>
         <div className="file-field input-field">
           <div className="btn  blue  ">
             <input
@@ -147,24 +180,12 @@ function QQ({ user }) {
               accept="image/*"
               onChange={(e) => setImage(e.target.files[0])}
             />
+
           </div>
+        
           <div className="file-path-wrapper"></div>
         </div>
-        <button
-          className="btn blue"
-          style={{
-            marginLeft: "20px",
-            padding: "15px",
-            background: "#0f2137",
-            borderRadius: "5px",
-            border: "none",
-            color: "white",
-          }}
-          onClick={() => SubmitDetails()}
-        >
-          {" "}
-          Post
-        </button>
+        
 
         <button
           className="btn green"
@@ -174,6 +195,7 @@ function QQ({ user }) {
             background: "#FF4D4D",
             borderRadius: "5px",
             border: "none",
+            fontSize: "16px",
             color: "white",
           }}
           onClick={() => setModalnote(true)}
@@ -182,6 +204,22 @@ function QQ({ user }) {
           Back
         </button>
 
+        <button
+          className="btn blue"
+          style={{
+            marginLeft: "20px",
+            padding: "15px",
+            background: "#4da64d",
+            borderRadius: "5px",
+            border: "none",
+            fontSize:'16px',
+            color: "white",
+          }}
+          onClick={() => SubmitDetails()}
+        >
+          {" "}
+          Post
+        </button>
 
         <Modal
           isOpen={modalnote}
