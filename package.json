@@ -10,7 +10,7 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
-    "@emailjs/browser": "^3.7.0",
+    "@emailjs/browser": "^3.9.1",
     "dotenv": "^16.0.3",
     "emailjs-com": "^3.2.0",
     "firebase": "^7.20.0",
