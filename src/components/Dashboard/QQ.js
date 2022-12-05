@@ -7,7 +7,7 @@ import {
   human,
 } from "../../config/firebase";
 import Link from "next/link";
-import emailjs from "@emailjs/browser";
+import from "@emailjs/browser";
 import Modal from "react-modal";
 
 Modal.setAppElement("#__next");
@@ -82,7 +82,7 @@ function QQ({ user }) {
     };
 
     emailjs
-      .send("gmail", "template_a6ubqsi", templateParams, "mf-pelQiEbS9plG_B")
+      .send("gmail", "###########", templateParams, "############")
       .then(
         function (response) {
           console.log("SUCCESS!", response.status, response.text);
