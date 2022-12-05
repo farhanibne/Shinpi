@@ -156,7 +156,7 @@ function QQ({ user }) {
           type="text"
           value={tag}
           id="title"
-          placeholder="Tags [ eg: Use only one,  use '#' ]"
+          placeholder="Tags [ eg: for multiple, use spaces and '#' ]"
           name="title"
           autoComplete="off"
           onChange={(e) => setTag(e.target.value)}
