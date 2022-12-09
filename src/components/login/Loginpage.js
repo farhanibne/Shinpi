@@ -4,6 +4,8 @@ import { Box, Container} from "theme-ui";
 import {Label,Input,Button} from "theme-ui";
 import { useRouter } from 'next/router'
 
+
+
 function Loginpage() {
 
   const emailRef = useRef()
@@ -12,8 +14,14 @@ function Loginpage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter();
 
-
   const login = async (e) => {
+    
+    const btn = document.getElementById("myBtn");
+    btn.innerHTML = "Login...";
+    btn.disabled = true;
+    btn.style.cursor = "not-allowed";
+    btn.style.backgroundColor = "#ccc";
+
     e.preventDefault()
     setLoading(true)
     const email = emailRef.current.value
@@ -24,7 +32,11 @@ function Loginpage() {
       console.log("login success")
     } catch (error) {
       setError(error.message)
-      return alert("Wrong email or password")
+      btn.innerHTML = "Login"
+      btn.disabled = false
+      btn.style.backgroundColor = "#000"
+      alert("Wrong email or password")
+      
     }
     setLoading(false)
   }
