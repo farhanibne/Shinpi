@@ -8,6 +8,7 @@ function Panel({ arti }) {
   const [article, setArticle] = useState([]);
   const [search, setSearch] = useState("");
   const [playing, setPlaying] = useState(false);
+  const [pause, setPause] = useState(false);
 
   useEffect(() => {
     firestore
@@ -108,10 +109,81 @@ function Panel({ arti }) {
                           <details>
                             <summary className="summary">Read More</summary>
                             {playing ? (
+                              <div>
+
+                             
                               <button
                                 onClick={() => {
                                   setPlaying(false);
                                   window.speechSynthesis.cancel();
+                                }}
+                                style={{
+                                  backgroundColor: "#f2f2f2",
+                                  color: "#000",
+                                  border: "none",
+                                  padding: "10px 20px",
+                                  textAlign: "center",
+                                  textDecoration: "none",
+                                  display: "inline-block",
+                                  fontSize: "18px",
+                                  margin: "4px 2px",
+                                  cursor: "pointer",
+                                  borderRadius: "8px",
+                                  outline: "none",
+                                  boxShadow: "0 3px  #d9d9d9",
+                                  width: "45%",
+                                  marginTop: "10px",
+                                  marginBottom: "10px",
+                                  marginLeft: "10px",
+                                  marginRight: "0px",
+                                  height: "auto",
+                                  fontWeight: "bold",
+                                  fontFamily: "sans-serif",
+
+                                }}
+                              >
+                                Cancel ⛔︎{" "}
+                              </button>
+                            {pause ? (
+                              <button
+                                onClick={() => {
+                                  setPause(false);
+                                  window.speechSynthesis.resume();
+                                }}
+                                style={{
+                                  backgroundColor: "#f2f2f2",
+                                  color: "#000",
+                                  border: "none",
+                                  padding: "10px 20px",
+                                  textAlign: "center",
+                                  textDecoration: "none",
+                                  display: "inline-block",
+                                  fontSize: "18px",
+                                  margin: "4px 2px",
+                                  cursor: "pointer",
+                                  borderRadius: "8px",
+                                  outline: "none",
+                                  boxShadow: "0 3px  #d9d9d9",
+                                  width: "45%",
+                                  marginTop: "10px",
+                                  marginBottom: "10px",
+                                  marginLeft: "10px",
+                                  marginRight: "0px",
+                                  height: "auto",
+                                  fontWeight: "bold",
+                                  fontFamily: "sans-serif",
+
+                                }}
+                              >
+                                Resume ⏯️{" "}
+                              </button>
+                            
+                            ):(
+                          
+                              <button
+                                onClick={() => {
+                                  setPause(true);
+                                  window.speechSynthesis.pause();
                                 }}
                                 style={{
                                   backgroundColor: "#f2f2f2",
@@ -127,10 +199,10 @@ function Panel({ arti }) {
                                   borderRadius: "8px",
                                   outline: "none",
                                   boxShadow: "0 3px  #d9d9d9",
-                                  width: "100%",
+                                  width: "45%",
                                   marginTop: "10px",
                                   marginBottom: "10px",
-                                  marginLeft: "0px",
+                                  marginLeft: "10px",
                                   marginRight: "0px",
                                   height: "auto",
                                   fontWeight: "bold",
@@ -138,8 +210,11 @@ function Panel({ arti }) {
                                   fontSize: "20px",
                                 }}
                               >
-                                Cancel ⛔︎{" "}
+                                Pause ⏸️{" "}
                               </button>
+                            )}
+                             
+                              </div>
                             ) : (
                               <button
                                 onClick={() => {
@@ -151,6 +226,10 @@ function Panel({ arti }) {
                                   speech.pitch = 1;
                                   window.speechSynthesis.speak(speech);
                                   setPlaying(true);
+
+
+                                  
+
                                 }}
                                 style={{
                                   backgroundColor: "#f2f2f2",
@@ -179,8 +258,13 @@ function Panel({ arti }) {
                               >
                                 Hear 📢
                               </button>
-                            )}
-                            <p>{arti.description}</p>
+                            )}                              
+                              <p className="sum">{arti.description}</p>
+                         
+                           
+                           
+
+                          
                           </details>
                         </div>
                       </div>
