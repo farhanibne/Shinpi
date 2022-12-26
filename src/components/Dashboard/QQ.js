@@ -25,6 +25,7 @@ const customStyles = {
     justifyContent: "center",
     alignItems: "center",
     border: "none",
+    
   },
   
   overlay: {
