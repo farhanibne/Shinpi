@@ -31,8 +31,6 @@ const customStyles = {
   },
 };
 
-
-
 function QQ({ user }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
