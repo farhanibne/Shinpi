@@ -9,6 +9,8 @@ function Panel({ arti }) {
   const [search, setSearch] = useState("");
   const [playing, setPlaying] = useState(false);
   const [pause, setPause] = useState(false);
+  const [rate, setRate] = useState(false);
+
 
   useEffect(() => {
     firestore
@@ -30,6 +32,7 @@ function Panel({ arti }) {
       );
     } else {
       return (
+
         <>
           <Box as="section" id="banner" sx={styles.banner}>
             <Container sx={styles.container}>
@@ -149,6 +152,7 @@ function Panel({ arti }) {
                                 onClick={() => {
                                   setPause(false);
                                   window.speechSynthesis.resume();
+                                  
                                 }}
                                 style={{
                                   backgroundColor: "#f2f2f2",
@@ -175,7 +179,7 @@ function Panel({ arti }) {
 
                                 }}
                               >
-                                Resume ⏯️{" "}
+                                Resume ▶️{" "}
                               </button>
                             
                             ):(
@@ -213,43 +217,86 @@ function Panel({ arti }) {
                                 Pause ⏸️{" "}
                               </button>
                             )}
+                            <br/>
+                            {/* make a choice to control the speed of the audio with the slider */}
+                           
                              
                               </div>
                             ) : (
+                              <div 
+                              style={{
+                                  display:'flex',
+                                  marginTop:'15px',
+                                  backgroundColor: "#f2f2f2",
+                                  color: "#000",
+                                  border: "none",
+
+                                  textAlign: "center",
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  borderRadius: "8px",
+                                  width: "100%",
+                                  height: "auto",
+                                  fontWeight: "bold",
+                                  fontFamily: "sans-serif",
+                                  fontSize: "20px",
+                                  boxShadow: "0 3px  #d9d9d9",
+                                  paddingTop: "15px",
+                                  paddingBottom: "15px",
+                                }}>
+
+                                <div style={{
+                                   width: "50%"
+                                }}>
+                                    <input
+                             type="range"
+                              min="0.5"
+                              max="2"
+                              step="0.1"
+                              defaultValue="1"
+                              id="rate"
+                              style={{
+                                width:'85%'
+                              }}
+                              // change the speed of the audio as per the slider
+
+                            />
+                                </div>
+                            <hr style={{
+                              border: "1px solid black"
+                            }}/>
                               <button
                                 onClick={() => {
+
+                                  const rate = document.getElementById("rate");
                                  
                                   const speech = new SpeechSynthesisUtterance();
                                   speech.text = `${arti.description}`;
                                   speech.volume = 1;
-                                  speech.rate = 0.9;
+                                  speech.rate = rate.value;
                                   speech.pitch = 1;
                                   window.speechSynthesis.speak(speech);
                                   setPlaying(true);
 
 
-                                  
+                                  speech.onend = () => {
+                                    setPlaying(false);
+                                  }
+ 
 
                                 }}
                                 style={{
                                   backgroundColor: "#f2f2f2",
                                   color: "#000",
-                                  border: "none",
-                                  padding: "10px 20px",
                                   textAlign: "center",
                                   textDecoration: "none",
                                   display: "inline-block",
-                                  boxShadow: "0 3px  #d9d9d9",
                                   fontSize: "16px",
-                                  margin: "4px 2px",
+                                  margin: "2 px",
                                   cursor: "pointer",
-                                  borderRadius: "8px",
                                   outline: "none",
-                                  width: "100%",
-                                  marginTop: "10px",
-                                  marginBottom: "10px",
-                                  marginLeft: "0px",
-                                  marginRight: "0px",
+                                  width: "50%",
+                                  border:'1px transparent',
                                   height: "auto",
                                   fontWeight: "bold",
                                   fontFamily: "sans-serif",
@@ -258,6 +305,9 @@ function Panel({ arti }) {
                               >
                                 Hear 📢
                               </button>
+                              <br/>
+                             
+                            </div>
                             )}                              
                               <p className="sum">{arti.description}</p>
                          
