@@ -10,6 +10,7 @@ function Panel({ arti }) {
   const [playing, setPlaying] = useState(false);
   const [pause, setPause] = useState(false);
   const [rate, setRate] = useState(false);
+  const [word, setWord] = useState(false);
 
 
 
