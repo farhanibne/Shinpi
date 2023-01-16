@@ -37,6 +37,7 @@ function QQ({ user }) {
   const [tag, setTag] = useState("");
   const [image, setImage] = useState(null);
   const [url, setUrl] = useState("");
+  const [math, setMath] = useState("");
   const form = useRef();
 
   const [modalIsOpen, setIsOpen] = useState(false);
